@@ -12,8 +12,6 @@ from sqlalchemy.sql.expression import func
 
 from aiida.backends import sqlalchemy as sa
 from aiida.backends.sqlalchemy.models.base import Base
-from aiida.backends.profile import load_profile, is_profile_loaded
-
 
 # Note that we can't use `DbAttribute.query` here because we didn't import it
 # in load_dbenv.
@@ -22,6 +20,7 @@ __copyright__ = u"Copyright (c), This file is part of the AiiDA platform. For fu
 __license__ = "MIT license, see LICENSE.txt file"
 __authors__ = "The AiiDA team."
 __version__ = "0.6.0"
+
 
 class DbAttribute(Base):
     """
@@ -42,6 +41,7 @@ class DbAttribute(Base):
 
     dbnode_id = Column(Integer, ForeignKey('db_dbnode.id'), nullable=False)
     dbnode = relationship('DbNode', backref='old_attrs')
+
 
 class DbExtra(Base):
     """
@@ -108,7 +108,8 @@ def attributes_to_dict(attr_list):
 
             tmp_d[key] = val
 
-    return (d, error)
+    return d, error
+
 
 def select_from_key(key, d):
     """
@@ -126,9 +127,11 @@ def select_from_key(key, d):
 
     return tmp_d
 
+
 def print_debug(debug, m):
     if debug:
         print(m)
+
 
 def create_columns(debug=False):
     """
@@ -152,11 +155,9 @@ def create_columns(debug=False):
         print_debug(debug, "Creating link type column")
         sa.session.execute('ALTER TABLE db_dblink ADD COLUMN type varchar(255)')
 
+
 def load_env(profile=None):
-    if not is_profile_loaded():
-        load_profile(profile)
-    # Getting import errors here, why is that?
-    from aiida.backends.sqlalchemy.utils import load_dbenv, is_dbenv_loaded
+    from aiida.backends.utils import load_dbenv, is_dbenv_loaded
     if not is_dbenv_loaded():
         load_dbenv()
 
@@ -257,6 +258,7 @@ def migrate_attributes(create_column=False, profile=None, group_size=1000, debug
             sa.session.execute('DROP TABLE db_dbattribute')
     sa.session.commit()
 
+
 def migrate_json_column(profile=None):
     """
     Migrate the TEXT column containing JSON into JSON columns
@@ -277,14 +279,15 @@ def migrate_json_column(profile=None):
         for table, col in table_col:
             sa.session.execute(sql.format(table=table, column=col))
 
-
     sa.session.commit()
+
 
 def create_gin_index():
     """
     Create the GIN index for the attributes column of db_dbnode.
     """
     sa.session.bind.execute("CREATE INDEX db_dbnode_attributes_idx ON db_dbnode USING gin(attributes)")
+
 
 def migrate(create_column=False, profile=None, group_size=1000, debug=False, delete_table = False):
     """
@@ -300,3 +303,7 @@ def migrate(create_column=False, profile=None, group_size=1000, debug=False, del
     migrate_extras(create_column=create_column, profile=profile, group_size=group_size, debug=debug, delete_table = delete_table)
     create_gin_index()
     migrate_json_column(profile=profile)
+
+
+if __name__ == '__main__':
+    migrate(create_column=True, profile="default",group_size=10000, debug=True)
