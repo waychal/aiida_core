@@ -1,26 +1,33 @@
 # -*- coding: utf-8 -*-
-import os
+
+from os import path
+from setuptools import setup, find_packages
 
 __copyright__ = u"Copyright (c), This file is part of the AiiDA platform. For further information please visit http://www.aiida.net/. All rights reserved."
 __license__ = "MIT license, see LICENSE.txt file."
 __version__ = "0.7.0"
 __authors__ = "The AiiDA team."
 
-from setuptools import setup, find_packages
-
 # Get the version number
-aiida_folder = os.path.split(os.path.abspath(__file__))[0]
-fname = os.path.join(aiida_folder, 'aiida', '__init__.py')
+aiida_folder = path.split(path.abspath(__file__))[0]
+fname = path.join(aiida_folder, 'aiida', '__init__.py')
 with open(fname) as aiida_init:
     ns = {}
-    exec (aiida_init.read(), ns)
+    exec(aiida_init.read(), ns)
     aiida_version = ns['__version__']
 
-bin_folder = os.path.join(aiida_folder, 'bin')
+bin_folder = path.join(aiida_folder, 'bin')
 setup(
     name='aiida',
     url='http://www.aiida.net/',
-    license='MIT license, see LICENSE.txt',
+    license='MIT License',
+    author=__authors__,
+    author_email='developers@aiida.net',
+    classifiers=[
+        'License :: OSI Approved :: MIT License',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 2',
+    ],
     version=aiida_version,
     # Abstract dependencies.  Concrete versions are listed in
     # requirements.txt
@@ -29,6 +36,7 @@ setup(
     # http://blog.miguelgrinberg.com/post/the-package-dependency-blues
     # for a useful dicussion
     install_requires=[
+        'python-dateutil~=2.4.0',
         'django==1.7.4',
         'django_extensions==1.5',
         'pytz==2014.10',
@@ -40,7 +48,7 @@ setup(
         'supervisor==3.1.3',
         'meld3==1.0.0',
         'numpy',
-        'plum==0.4.3'
+        'plum==0.4.3',
         'SQLAlchemy==1.0.12',
         'SQLAlchemy-Utils==0.31.2',
         'ujson==1.35',
@@ -53,7 +61,7 @@ setup(
         'tabulate==0.7.5',
         'ete3==3.0.0b35',
     ],
-    extra_require={
+    extras_require={
         'verdi_shell': ['ipython'],
         'ssh': [
             'paramiko==1.15.2',
@@ -62,15 +70,62 @@ setup(
         ],
         'REST': [
             'django-tastypie==0.12.1',
-            'python-dateutil==2.4.0',
             'python-mimeparse==0.1.4',
+        ],
+        'postgres': [
+            'psycopg2==2.6',
         ],
     },
     dependency_links=[
-        'git+https://bitbucket.org/aiida_team/plum.git@v0.4.3#egg=plum',
+        'https://bitbucket.org/aiida_team/plum/get/v0.4.3.zip#egg=plum-0.4.3',
     ],
     packages=find_packages(),
-    scripts=[os.path.join(bin_folder, f) for f in os.listdir(bin_folder)
-             if not os.path.isdir(os.path.join(bin_folder, f))],
-    long_description=open(os.path.join(aiida_folder, 'README.rst')).read(),
+    entry_points={
+        'console_scripts': [
+            'verdi=aiida.cmdline.verdilib:run'
+        ],
+        # following are AiiDA plugin entry points:
+        'aiida.calculations': [
+            'simpleplugins.templatereplacer = aiida.orm.calculation.job.simpleplugins.templatereplacer:TemplatereplacerCalculation',
+            'quantumespresso.pw = aiida.orm.calculation.job.quantumespresso.pw:PwCalculation',
+            'quantumespresso.cp = aiida.orm.calculation.job.quantumespresso.cp:CpCalculation',
+            'quantumespresso.pwimmigrant = aiida.orm.calculation.job.quantumespresso.pwimmigrant:PwimmigrantCalculation',
+            'nwchem.basic = aiida.orm.calculation.job.nwchem.basic:BasicCalculation',
+            'nwchem.pymatgen = aiida.orm.calculation.job.nwchem.nwcpymatgen:NwcpymatgenCalculation',
+            'codtools.ciffilter = aiida.orm.calculation.job.codtools.ciffilter:CiffilterCalculation',
+            'codtools.cifcellcontents = aiida.orm.calculation.job.codtools.cifcellcontents:CifcellcontentsCalculation',
+            'codtools.cifcodcheck = aiida.orm.calculation.job.codtools.cifcodcheck:CifcodcheckCalculation',
+            'codtools.cifcoddeposit = aiida.orm.calculation.job.codtools.cifcoddeposit:CifcoddepositCalculation',
+            'codtools.cifcodnumbers = aiida.orm.calculation.job.codtools.cifcodnumbers:CifcodnumbersCalculation',
+            'codtools.cifsplitprimitive = aiida.orm.calculation.job.codtools.cifsplitprimitive:CifsplitprimitiveCalculation',
+        ],
+        'aiida.parsers': [
+            'codtools.cifcellcontents = aiida.parsers.plugins.codtools.cifcellcontents:CifcellcontentsParser',
+            'codtools.cifcodcheck = aiida.parsers.plugins.codtools.cifcodcheck:CifcodcheckParser',
+            'codtools.cifcoddeposit = aiida.parsers.plugins.codtools.cifcoddeposit:CifcoddepositParser',
+            'codtools.cifcodnumbers = aiida.parsers.plugins.codtools.cifcodnumbers:CifcodnumbersParser',
+            'codtools.ciffilter = aiida.parsers.plugins.codtools.ciffilter:CiffilterParser',
+            'codtools.cifsplitprimitive = aiida.parsers.plugins.codtools.cifsplitprimitive:CifsplitprimitiveParser',
+            'nwchem.basic = aiida.parsers.plugins.nwchem.basic:BasicParser',
+            'nwchem.basenwc = aiida.parsers.plugins.nwchem.__init__:BasenwcParser',
+            'nwchem.pymatgen = aiida.parsers.plugins.nwchem.nwcpymatgen:NwcpymatgenParser',
+            'quantumespresso.basicpw = aiida.parsers.plugins.quantumespresso.basicpw:BasicpwParser',
+            'quantumespresso.cp = aiida.parsers.plugins.quantumespresso.cp:CpParser',
+            'quantumespresso.pw = aiida.parsers.plugins.quantumespresso.pw:PwParser',
+        ],
+        'aiida.cmdline': [],
+        'aiida.schedulers': [
+            'direct = aiida.scheduler.plugins.direct:DirectScheduler',
+            'slurm = aiida.scheduler.plugins.slurm:SlurmScheduler',
+            'pbspro = aiida.scheduler.plugins.pbspro:PbsproScheduler',
+            'torque = aiida.scheduler.plugins.torque:TorqueScheduler',
+        ],
+        'aiida.transports': [
+            'SSH = aiida.transport.plugins.ssh:SshTransport',
+            'local = aiida.transport.plugins.local:LocalTransport',
+        ],
+        'aiida.workflows': [],
+    },
+    scripts=['bin/runaiida'],
+    long_description=open(path.join(aiida_folder, 'README.rst')).read(),
 )
