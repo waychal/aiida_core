@@ -104,11 +104,15 @@ class CalculationTranslator(NodeTranslator):
         :return: the retrieved output files for job calculation
         """
         if node.dbnode.type.startswith("calculation.job."):
+            response = {}
 
-            output_folder = node.out.retrieved._get_folder_pathsubfolder
+            try:
+                output_folder = node.out.retrieved._get_folder_pathsubfolder
+            except AttributeError as e:
+                response["status"] = 200
+                response["data"] = "This node does not have an output with link retrieved"
 
             if filename is not None:
-                response = {}
 
                 if rtype is None:
                     rtype = "download"
