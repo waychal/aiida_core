@@ -472,11 +472,11 @@ class NodeTranslator(BaseTranslator):
         else:
             return super(NodeTranslator, self).get_results()
 
-    def get_statistics(self, user_email=None):
+    def get_statistics(self, user_id=None):
         "Return statistics for a given node"
         from aiida.backends.utils import QueryFactory
         qmanager = QueryFactory()()
-        return qmanager.get_creation_statistics(user_email=user_email)
+        return qmanager.get_creation_statistics(user_id=user_id)
 
 
     def get_io_tree(self, uuid_pattern):

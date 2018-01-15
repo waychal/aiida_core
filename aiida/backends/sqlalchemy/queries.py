@@ -17,7 +17,7 @@ class QueryManagerSQLA(AbstractQueryManager):
 
     def get_creation_statistics(
             self,
-            user_email=None
+            user_id=None
     ):
         """
         Return a dictionary with the statistics of node creation, summarized by day,
@@ -25,8 +25,8 @@ class QueryManagerSQLA(AbstractQueryManager):
 
         :note: Days when no nodes were created are not present in the returned `ctime_by_day` dictionary.
 
-        :param user_email: If None (default), return statistics for all users.
-            If an email is specified, return only the statistics for the given user.
+        :param user_id: If None (default), return statistics for all users.
+            If user id is specified, return only the statistics for the given user.
 
         :return: a dictionary as
             follows::
