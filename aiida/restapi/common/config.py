@@ -26,7 +26,7 @@ generic 500: Internal Server Error exception)
 
 """
 APP_CONFIG = {
-              'DEBUG': False,
+              'DEBUG': True,
               'PROPAGATE_EXCEPTIONS': True,
               }
 

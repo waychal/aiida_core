@@ -66,7 +66,8 @@ class SqlaUser(User):
     @staticmethod
     def get_db_columns():
         from aiida.orm.implementation.general.utils import get_db_columns
-        return get_db_columns(DbUser)
+        additional_help_text = super(SqlaUser, SqlaUser).get_db_columns_help_text()
+        return get_db_columns(DbUser, additional_help_text)
 
     @property
     def dbuser(self):

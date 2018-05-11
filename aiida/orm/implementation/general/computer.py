@@ -198,6 +198,86 @@ class AbstractComputer(object):
         """
         pass
 
+    @staticmethod
+    def get_db_columns_help_text():
+        """
+        :return: dict of help text for every column
+        """
+        return {
+            "id": {
+                "display_name": "Id",
+                "help_text": "Id of the Computer"
+            },
+            "name": {
+                "display_name": "Name",
+                "help_text": "Name of the Computer"
+            },
+            "hostname": {
+                "display_name": "Host",
+                "help_text": "Name of the host"
+            },
+            "description": {
+                "display_name": "Description",
+                "help_text": "Short description of the Computer"
+            },
+            "enabled": {
+                "display_name": "Enabled",
+                "help_text": "True(False) if the computer is(not) enabled to run jobs"
+            },
+            "scheduler_type": {
+                "display_name": "Scheduler",
+                "help_text": "Scheduler type",
+                "valid_choices": {
+                    "direct": {
+                        "doc": "Support for the direct execution bypassing schedulers."
+                    },
+                    "pbsbaseclasses.PbsBaseClass": {
+                        "doc": "Base class with support for the PBSPro scheduler"
+                    },
+                    "pbspro": {
+                        "doc": "Subclass to support the PBSPro scheduler"
+                    },
+                    "sge": {
+                        "doc": "Support for the Sun Grid Engine scheduler and its variants/forks (Son of Grid Engine, Oracle Grid Engine, ...)"
+                    },
+                    "slurm": {
+                        "doc": "Support for the SLURM scheduler (http://slurm.schedmd.com/)."
+                    },
+                    "torque": {
+                        "doc": "Subclass to support the Torque scheduler.."
+                    }
+                }
+            },
+            "transport_type": {
+                "display_name": "Transport type",
+                "help_text": "Transport Type",
+                "valid_choices": {
+                    "local": {
+                        "doc": "Support copy and command execution on the same host on which AiiDA is running via direct file copy and execution commands."
+                    },
+                    "ssh": {
+                        "doc": "Support connection, command execution and data transfer to remote computers via SSH+SFTP."
+                    }
+                }
+            },
+            "transport_params": {
+                "display_name": "Transport parameters",
+                "help_text": "Transport Parameters"
+            },
+            "uuid": {
+                "display_name": "Unique ID",
+                "help_text": "Universally Unique Identifier"
+            },
+            "metadata": {
+                "help_text": "metadata of the object",
+                "display_name": "Metadata"
+            },
+            "_metadata": {
+                "help_text": "Metadata",
+                "display_name": "Metadata",
+            },
+        }
+
     @abstractclassmethod
     def list_names(cls):
         """

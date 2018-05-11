@@ -155,6 +155,154 @@ class AbstractNode(object):
         """
         pass
 
+    @staticmethod
+    def get_db_columns_help_text():
+        """
+        :return: dict of help text for every column
+        """
+        return {
+            "id": {
+                "help_text": "Id of the object",
+                "display_name": "Id",
+            },
+            "description": {
+                "help_text": "short description of the Computer",
+                "display_name": "Description",
+            },
+            "name": {
+                "help_text": "Name of the object",
+                "display_name": "Name",
+            },
+            "label": {
+                "help_text": "User-assigned label",
+                "display_name": "Label",
+            },
+            "type": {
+                "help_text": "Code type",
+                "display_name": "Type",
+            },
+            "uuid": {
+                "help_text": "Universally Unique Identifier",
+                "display_name": "Unique ID",
+            },
+            "ctime": {
+                "help_text": "Creation time of the node",
+                "display_name": "Creation time"
+            },
+            "time": {
+                "help_text": "Creation time",
+                "display_name": "Creation time",
+            },
+            "mtime": {
+                "help_text": "Last modification time",
+                "display_name": "Last Modification time",
+            },
+            "state": {
+                "help_text": "State of the calculation",
+                "display_name": "State"
+            },
+            "attributes": {
+                "help_text": "Attributes of the node",
+                "display_name": "Attributes"
+            },
+            "attributes.job_id": {
+                "help_text": "ID assigned by the job scheduler",
+                "display_name": "Job ID"
+            },
+            "attributes.lat_jobinfo": {
+                "help_text": "",
+                "display_name": ""
+            },
+            "attributes.jobresource_params": {
+                "help_text": "Resources used by the job",
+                "display_name": "Job resources"
+            },
+            "attributes.linkname_retrieved": {
+                "help_text": "",
+                "display_name": ""
+            },
+            "attributes.max_wallclock_seconds": {
+                "help_text": "Maximum wall time assigned by the scheduler",
+                "display_name": "Walltime (s)"
+            },
+            "attributes.parser": {
+                "help_text": "",
+                "display_name": ""
+            },
+            "attributes.remote_workdir": {
+                "help_text": "",
+                "display_name": ""
+            },
+            "attributes.retrieve_list": {
+                "help_text": "",
+                "display_name": ""
+            },
+            "attributes.retrieve_singlefile_list": {
+                "help_text": "",
+                "display_name": ""
+            },
+            "attributes.scheduler_lastchecktime": {
+                "help_text": "",
+                "display_name": ""
+            },
+            "attributes.state": {
+                "help_text": "AiiDA state of the calculation",
+                "display_name": "State"
+            },
+            "attributes.scheduler_state": {
+                "help_text": "scheduler state for the calculation",
+                "display_name": "scheduler state"
+            },
+            "attributes.append_text": {
+                "help_text": "",
+                "display_name": "Appended text"
+            },
+            "attributes.prepend_text": {
+                "help_text": "",
+                "display_name": "Prepended text"
+            },
+            "attributes.remote_exec_path": {
+                "help_text": "",
+                "display_name": ""
+            },
+            "attributes.input_plugin": {
+                "help_text": "Name of the plugin used to interface the code to AiiDA",
+                "display_name": "Plugin"
+            },
+            "attributes.is_local": {
+                "help_text": "True (False) if the code is run remotely (on a local computer)",
+                "display_name": "Local code (T/F)"
+            },
+            "attributes.": {
+                "help_text": "Name of the link assigned after retrieval",
+                "display_name": "Linkname retrieved"
+            },
+            "extras": {
+                "help_text": "Extras of the node",
+                "display_name": "Extras"
+            },
+            "user_id": {
+                "help_text": "Id of the user that created the node",
+                "display_name": "Id of creator"
+            },
+            "user_email": {
+                "help_text": "Email of the user that created the node",
+                "display_name": "Email of creator"
+            },
+            "process_type": {
+                "help_text": "Process type",
+                "display_name": "Process type"
+            },
+            "public": {
+                "help_text": "If current node is public",
+                "display_name": "Public"
+            },
+            "nodeversion": {
+                "help_text": "Node version",
+                "display_name": "Node version"
+            }
+        }
+
     @property
     def logger(self):
         """

@@ -31,12 +31,22 @@ class UserTranslator(BaseTranslator):
 
     _result_type = __label__
 
-    # Extract the default projections from custom_schema if they are defined
-    if 'columns' in custom_schema:
-        _default_projections = custom_schema['columns'][__label__]
-    else:
-        # send only white listed keys in default response for user for security reasons
-        _default_projections = ['id', 'first_name', "last_name", 'institution', 'date_joined']
+    _default_projections = {
+        "column_order": [
+            "id",
+            "first_name",
+            "last_name",
+            "institution",
+            "date_joined"
+        ],
+        "column_info": {
+            "id": {"is_display": True},
+            "first_name": {"is_display": True},
+            "last_name": {"is_display": True},
+            "institution": {"is_display": True},
+            "date_joined": {"is_display": False}
+        }
+    }
 
     def __init__(self, **kwargs):
         """

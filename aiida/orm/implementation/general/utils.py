@@ -7,7 +7,7 @@
 # For further information on the license, see the LICENSE.txt file        #
 # For further information please visit http://www.aiida.net               #
 ###########################################################################
-def get_db_columns(db_class):
+def get_db_columns(db_class, additional_help_text=None):
     """
     This function returns a dictionary where the keys are the columns of
     the table corresponding to the db_class and the values are the column
@@ -45,6 +45,8 @@ def get_db_columns(db_class):
     # Ordinary columns
     columns = table.columns
 
+    print "columns: ", columns
+
     # Determine the keys (for hybrid_properties I rely on __name__)
     column_property_keys = map(lambda x: x.key, column_properties)
     hybrid_property_keys = map(lambda x: x.__name__, hybrid_properties)
@@ -68,6 +70,8 @@ def get_db_columns(db_class):
     column_names = column_keys + property_keys + hybrid_property_keys
     column_types.extend(column_property_types)
     column_types.extend(hybrid_property_types)
+
+    print "column_names: ", column_names
 
     column_python_types = []
 
@@ -107,6 +111,16 @@ def get_db_columns(db_class):
             'related_table': referred_table_name,
             'related_column': referred_field_name,
         })
+
+    # if help text is available, combine it with basic info
+    if additional_help_text is not None:
+
+        for column in schema:
+            print column
+            if column in additional_help_text:
+                schema[column].update(additional_help_text[column])
+            else:
+                raise ValueError("schema error: help text is not available for "+ column)
 
     return schema
 

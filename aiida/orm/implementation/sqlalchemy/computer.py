@@ -89,8 +89,8 @@ class Computer(AbstractComputer):
         #I import get_db_columns here to avoid circular imports.
         #In fact, aiida.orm.implementation.django.utils imports Computer
         from aiida.orm.implementation.general.utils import get_db_columns
-        return get_db_columns(DbComputer)
-
+        additional_help_text = super(Computer, Computer).get_db_columns_help_text()
+        return get_db_columns(DbComputer, additional_help_text)
 
     @classmethod
     def list_names(cls):

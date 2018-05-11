@@ -80,8 +80,11 @@ class DjangoUser(User):
 
     @staticmethod
     def get_db_columns():
+        print "in django user.."
         from aiida.backends.djsite.querybuilder_django.dummy_model import DbUser as DbU
-        return get_db_columns(DbU)
+        additional_help_text = super(DjangoUser, DjangoUser).get_db_columns_help_text()
+        print "help:", additional_help_text
+        return get_db_columns(DbU, additional_help_text)
 
     @property
     def dbuser(self):

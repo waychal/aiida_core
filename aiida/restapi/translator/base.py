@@ -39,7 +39,7 @@ class BaseTranslator(object):
 
     _result_type = __label__
 
-    _default = _default_projections = []
+    _default = _default_projections = {"column_order": [], "column_info": {}}
     _is_qb_initialized = False
     _is_id_query = None
     _total_count = None
@@ -118,44 +118,43 @@ class BaseTranslator(object):
         orm_class = get_object_from_string(class_string)
 
         # Construct the json object to be returned
+        print "orm_class: ", orm_class
         basic_schema = orm_class.get_db_columns()
+
+        print "basic_schema: ", basic_schema
 
         """
         Determine the API schema (spartially overlapping with the ORM/database one).
         When the ORM is based on django, however, attributes and extras are not colums of the database but are
-        nevertheless         valid projections. We add them by hand into the API schema.
+        nevertheless valid projections. We add them by hand into the API schema.
         """
         # TODO change the get_db_columns method to include also relationships such as attributes, extras, input,
-        # and outputs        in order to have a more complete definition of the schema.
+        # and outputs in order to have a more complete definition of the schema.
 
-        if self._default_projections == ['**']:
-            schema = basic_schema  # No custom schema, take the basic one
-        else:
+        # Non-schema possible projections (only for nodes when django is backend)
+        non_schema_projs = ('attributes', 'extras')
+        # Sub-projections of JSON fields (applies to both SQLA and Django)
+        non_schema_proj_prefix = ('attributes.', 'extras.')
 
-            # Non-schema possible projections (only for nodes when django is backend)
-            non_schema_projs = ('attributes', 'extras')
-            # Sub-projections of JSON fields (applies to both SQLA and Django)
-            non_schema_proj_prefix = ('attributes.', 'extras.')
+        schema_key = []
+        schema_values = []
 
-            schema_key = []
-            schema_values = []
+        for k in self._default_projections["column_order"]:
+            if k in basic_schema.keys():
+                schema_key.append(k)
+                schema_values.append(basic_schema[k])
+            elif k in non_schema_projs:
+                # Catches 'attributes' and 'extras'
+                schema_key.append(k)
+                value = dict(type=dict, is_foreign_key=False)
+                schema_values.append(value)
+            elif k.startswith(non_schema_proj_prefix):
+                # Catches 'attributes.<key>' and 'extras.<key>'
+                schema_key.append(k)
+                value = dict(type=None, is_foreign_key=False)
+                schema_values.append(value)
 
-            for k in self._default_projections:
-                if k in basic_schema.keys():
-                    schema_key.append(k)
-                    schema_values.append(basic_schema[k])
-                elif k in non_schema_projs:
-                    # Catches 'attributes' and 'extras'
-                    schema_key.append(k)
-                    value = dict(type=dict, is_foreign_key=False)
-                    schema_values.append(value)
-                elif k.startswith(non_schema_proj_prefix):
-                    # Catches 'attributes.<key>' and 'extras.<key>'
-                    schema_key.append(k)
-                    value = dict(type=None, is_foreign_key=False)
-                    schema_values.append(value)
-
-            schema = dict(zip(schema_key, schema_values))
+        schema = dict(zip(schema_key, schema_values))
 
         def table2resource(table_name):
             """
@@ -184,9 +183,12 @@ class BaseTranslator(object):
         for k, v in schema.iteritems():
 
             # Add custom fields to the column dictionaries
-            if 'fields' in self.custom_schema:
-                if k in self.custom_schema['fields'].keys():
-                    schema[k].update(self.custom_schema['fields'][k])
+            for column in self._default_projections["column_order"]:
+                if column in self._default_projections["column_info"].keys():
+                    schema[column].update(self._default_projections["column_info"][column])
+                else:
+                    raise RestValidationError("Schema error: column order and info in default projection"
+                                              "should have same number of entries")
 
             # Convert python types values into strings
             schema[k]['type'] = str(schema[k]['type'])[7:-2]
@@ -199,7 +201,7 @@ class BaseTranslator(object):
 
         # TODO Construct the ordering (all these things have to be moved in matcloud_backend)
         if self._default_projections != ['**']:
-            ordering = self._default_projections
+            ordering = self._default_projections["column_order"]
         else:
             # random ordering if not set explicitely in
             ordering = schema.keys()

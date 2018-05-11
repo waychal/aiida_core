@@ -235,3 +235,58 @@ class User(object):
         :return: The short name
         """
         return self.email
+
+    @staticmethod
+    def get_db_columns():
+        """
+        This method returns a list with the column names and types of the table
+        corresponding to this class.
+        :return: a list with the names of the columns
+        """
+        print "in orm user abstract"
+        pass
+
+    @staticmethod
+    def get_db_columns_help_text():
+        """
+        :return: dict of help text for every column
+        """
+        print "get help text from here.."
+        return {
+            "first_name": {
+                "help_text": "First name of the user",
+                "display_name": "First name"
+            },
+            "last_name": {
+                "help_text": "Last name of the user",
+                "display_name": "Last name"
+            },
+            "email": {
+                "help_text": "e-mail of the user",
+                "display_name": "email"
+            },
+            "institution": {
+                "help_text": "Affiliation of the user",
+                "display_name": "Institution"
+            },
+            "date_joined": {
+                "help_text": "Date and time of registration",
+                "display_name": "User since"
+            },
+            "last_login": {
+                "help_text": "Date and time of the last login",
+                "display_name": "Last login"
+            },
+            "is_active": {
+                "help_text": "True(False) if the user is active(not)",
+                "display_name": "Active"
+            },
+            "user_id": {
+                "help_text": "Id of the user that created the node",
+                "display_name": "Id of creator"
+            },
+            "user_email": {
+                "help_text": "Email of the user that created the node",
+                "display_name": "Email of creator"
+            }
+        }

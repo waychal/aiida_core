@@ -31,6 +31,35 @@ class CalculationTranslator(NodeTranslator):
 
     _result_type = __label__
 
+    _default_projections = {
+        "column_order": [
+            "id",
+            "label",
+            "type",
+            "ctime",
+            "mtime",
+            "uuid",
+            "user_id",
+            "user_email",
+            "attributes.state",
+            "attributes",
+            "extras"
+        ],
+        "column_info": {
+            "id": {"is_display": True},
+            "label": {"is_display": False},
+            "type": {"is_display": True},
+            "ctime": {"is_display": True},
+            "mtime": {"is_display": True},
+            "uuid": {"is_display": False},
+            "user_id": {"is_display": False},
+            "user_email": {"is_display": True},
+            "attributes": {"is_display": False},
+            "attributes.state": {"is_display": True},
+            "extra": {"is_display": False}
+        }
+    }
+
     def __init__(self, **kwargs):
         """
         Initialise the parameters.

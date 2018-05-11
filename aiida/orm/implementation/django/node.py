@@ -44,7 +44,8 @@ class Node(AbstractNode):
     @staticmethod
     def get_db_columns():
         from aiida.backends.djsite.querybuilder_django.dummy_model import DbNode
-        return get_db_columns(DbNode)
+        additional_help_text = super(Node, Node).get_db_columns_help_text()
+        return get_db_columns(DbNode, additional_help_text)
 
     @classmethod
     def get_subclass_from_pk(cls, pk):
