@@ -17,8 +17,6 @@ from aiida.common.exceptions import InputValidationError, ValidationError, \
 from aiida.restapi.common.exceptions import RestValidationError
 from aiida.restapi.translator.base import BaseTranslator
 from aiida.manage.manager import get_manager
-from aiida import orm
-
 
 class NodeTranslator(BaseTranslator):
     # pylint: disable=too-many-instance-attributes,anomalous-backslash-in-string,too-many-arguments,too-many-branches,fixme
@@ -28,8 +26,11 @@ class NodeTranslator(BaseTranslator):
 
     # A label associated to the present class (coincides with the resource name)
     __label__ = "nodes"
+
     # The AiiDA class one-to-one associated to the present class
-    _aiida_class = orm.Node
+    from aiida.orm import Node
+    _aiida_class = Node
+
     # The string name of the AiiDA class
     _aiida_type = "node.Node"
 
