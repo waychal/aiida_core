@@ -8,29 +8,27 @@
 # For further information please visit http://www.aiida.net               #
 ###########################################################################
 """
-Translator for upf data
+Translator for bands data
 """
 
 from __future__ import division
 from __future__ import print_function
 from __future__ import absolute_import
-from aiida.restapi.translator.data import DataTranslator
-from aiida.restapi.translator.node import NodeTranslator
-from aiida.restapi.common.exceptions import RestInputValidationError
+from aiida.restapi.translator.nodes.data import DataTranslator
 
 
-class UpfDataTranslator(DataTranslator):
+class BandsDataTranslator(DataTranslator):
     """
-    Translator relative to resource 'upfs' and aiida class UpfData
+    Translator relative to resource 'bands' and aiida class BandsData
     """
 
     # A label associated to the present class (coincides with the resource name)
-    __label__ = "upfs"
+    __label__ = "bands"
     # The AiiDA class one-to-one associated to the present class
-    from aiida.orm import UpfData
-    _aiida_class = UpfData
+    from aiida.orm import BandsData
+    _aiida_class = BandsData
     # The string name of the AiiDA class
-    _aiida_type = "data.upf.UpfData"
+    _aiida_type = "data.array.bands.BandsData"
     # The string associated to the AiiDA class in the query builder lexicon
     _qb_type = _aiida_type + '.'
 
@@ -41,17 +39,31 @@ class UpfDataTranslator(DataTranslator):
         Initialise the parameters.
         Create the basic query_help
         """
-        super(UpfDataTranslator, self).__init__(Class=self.__class__, **kwargs)
+        super(BandsDataTranslator, self).__init__(Class=self.__class__, **kwargs)
 
     @staticmethod
     def get_visualization_data(node, visformat=None):
         """
-
         Returns: data in a format required by dr.js to visualize a 2D plot
         with multiple data series.
 
+        Strategy: I take advantage of the export functionality of BandsData
+        objects. The raw export has to be filtered for string escape characters.
+        this is done by decoding the string returned by node._exportcontent.
+
+        TODO: modify the function exportstring (or add another function in
+        BandsData) so that it returns a python object rather than a string.
         """
-        return []
+
+        import ujson as uj
+        json_string = node._exportcontent('json', comments=False)  # pylint: disable=protected-access
+        json_content = uj.decode(json_string[0])
+
+        # Add Ylabel which by default is not exported
+        y_label = node.label + ' ({})'.format(node.get_attribute('units'))
+        json_content['Y_label'] = y_label
+
+        return json_content
 
     @staticmethod
     def get_downloadable_data(node, download_format=None):
@@ -64,24 +76,6 @@ class UpfDataTranslator(DataTranslator):
         :returns: raise RestFeatureNotAvailable exception
         """
 
-        response = {}
+        from aiida.restapi.common.exceptions import RestFeatureNotAvailable
 
-        if node.folder.exists():
-            folder_node = node._repository._get_folder_pathsubfolder  # pylint: disable=protected-access
-            filename = node.filename
-
-            try:
-                content = NodeTranslator.get_file_content(folder_node, filename)
-            except IOError:
-                error = "Error in getting {} content".format(filename)
-                raise RestInputValidationError(error)
-
-            response["status"] = 200
-            response["data"] = content
-            response["filename"] = filename
-
-        else:
-            response["status"] = 200
-            response["data"] = "file does not exist"
-
-        return response
+        raise RestFeatureNotAvailable("This endpoint is not available for Bands.")

@@ -353,7 +353,7 @@ class NodeTranslator(BaseTranslator):
 
         :param parent: package/class.
             If package looks for the classes in submodules.
-            If class, first lookss for the package where it is contained
+            If class, first looks for the package where it is contained
         :param parent_class: class of which to look for subclasses
         :param recursive: True/False (go recursively into submodules)
         """

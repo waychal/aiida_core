@@ -16,7 +16,7 @@ from __future__ import print_function
 from __future__ import absolute_import
 import os
 
-from aiida.restapi.translator.node import NodeTranslator
+from aiida.restapi.translator.nodes.node import NodeTranslator
 from aiida.restapi.common.exceptions import RestInputValidationError
 
 
