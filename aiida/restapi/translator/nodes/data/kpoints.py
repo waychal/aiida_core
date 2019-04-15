@@ -29,8 +29,6 @@ class KpointsDataTranslator(DataTranslator):
     _aiida_class = KpointsData
     # The string name of the AiiDA class
     _aiida_type = "data.array.kpoints.KpointsData"
-    # The string associated to the AiiDA class in the query builder lexicon
-    _qb_type = _aiida_type + '.'
 
     _result_type = __label__
 

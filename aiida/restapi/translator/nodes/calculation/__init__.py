@@ -32,8 +32,6 @@ class CalculationTranslator(NodeTranslator):
     _aiida_class = CalcJobNode
     # The string name of the AiiDA class
     _aiida_type = "process.calculation.calcjob.CalcJobNode"
-    # The string associated to the AiiDA class in the query builder lexicon
-    _qb_type = _aiida_type + '.'
 
     _result_type = __label__
 

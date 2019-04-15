@@ -32,8 +32,6 @@ class NodeTranslator(BaseTranslator):
     _aiida_class = orm.Node
     # The string name of the AiiDA class
     _aiida_type = "node.Node"
-    # The string associated to the AiiDA class in the query builder lexicon
-    _qb_type = _aiida_type + '.'
 
     # If True (False) the corresponding AiiDA class has (no) uuid property
     _has_uuid = True

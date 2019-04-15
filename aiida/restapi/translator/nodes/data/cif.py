@@ -27,8 +27,6 @@ class CifDataTranslator(DataTranslator):
     _aiida_class = CifData
     # The string name of the AiiDA class
     _aiida_type = "data.cif.CifData"
-    # The string associated to the AiiDA class in the query builder lexicon
-    _qb_type = _aiida_type + '.'
 
     _result_type = __label__
 

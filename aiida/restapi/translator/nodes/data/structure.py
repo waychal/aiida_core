@@ -32,8 +32,6 @@ class StructureDataTranslator(DataTranslator):
     _aiida_class = StructureData
     # The string name of the AiiDA class
     _aiida_type = "data.structure.StructureData"
-    # The string associated to the AiiDA class in the query builder lexicon
-    _qb_type = _aiida_type + '.'
 
     _result_type = __label__
 
