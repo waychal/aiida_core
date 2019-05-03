@@ -587,9 +587,10 @@ class NodeTranslator(BaseTranslator):
             nodetype = main_node.node_type
             nodelabel = main_node.label
             display_type = nodetype.split('.')[-2]
-            description = main_node.get_description()
-            if description == '':
-                description = main_node.node_type.split('.')[-2]
+            try:
+                description = main_node.get_description()
+            except ValueError:
+                description = display_type
 
             nodes.append({
                 "id": node_count,
@@ -628,9 +629,10 @@ class NodeTranslator(BaseTranslator):
                     nodetype = node.node_type
                     nodelabel = node.label
                     display_type = nodetype.split('.')[-2]
-                    description = node.get_description()
-                    if description == '':
-                        description = node.node_type.split('.')[-2]
+                    try:
+                        description = node.get_description()
+                    except ValueError:
+                        description = display_type
 
                     nodes.append({
                         "id": node_count,
@@ -682,9 +684,10 @@ class NodeTranslator(BaseTranslator):
                     nodetype = node.node_type
                     nodelabel = node.label
                     display_type = nodetype.split('.')[-2]
-                    description = node.get_description()
-                    if description == '':
-                        description = node.node_type.split('.')[-2]
+                    try:
+                        description = node.get_description()
+                    except ValueError:
+                        description = display_type
 
                     nodes.append({
                         "id": node_count,

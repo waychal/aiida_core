@@ -680,6 +680,18 @@ class RESTApiTestSuite(RESTApiTestCase):
             self, "calculations", "/calculations?limit=1&offset=1&orderby=+id", expected_list_ids=[0])
 
     ############### calculation inputs  #############
+
+    def test_calculation_retrieved_inputs(self):
+        """
+        Get the list of give calculation inputs
+        """
+        node_uuid = self.get_dummy_data()["calculations"][1]["uuid"]
+        node_uuid = self.get_dummy_data()["calculations"][1]["uuid"]
+        url = self.get_url_prefix() + "/calculations/" + str(node_uuid) + "/io/retrieved_outputs"
+        with self.app.test_client() as client:
+            rv_obj = client.get(url)
+            print (": ", rv_obj.data)
+
     def test_calculation_inputs(self):
         """
         Get the list of give calculation inputs
